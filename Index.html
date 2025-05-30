@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIC Salud</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f8f9;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #006666;
+    }
+    .chat-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #00b3b3;
+      color: white;
+      padding: 10px 20px;
+      margin: 10px 5px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #009999;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>FIC Salud 🧠💬</h1>
+    <div class="chat-box" id="chat">
+      <p>Hola 👋 Soy tu bot de apoyo. ¿Quieres evaluar cómo te sientes hoy?</p>
+      <button onclick="startTest()">Evaluar cómo me siento</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      "¿Te has sentido muy cansado o agotado últimamente?",
+      "¿Has tenido problemas para dormir o descansar?",
+      "¿Te has sentido nervioso, estresado o ansioso?",
+      "¿Te cuesta concentrarte en tus actividades?",
+      "¿Te sientes abrumado por tus tareas o emociones?"
+    ];
+    const options = ["Nada", "Un poco", "Bastante"];
+    let current = 0;
+    let score = 0;
+
+    function startTest() {
+      document.getElementById("chat").innerHTML = `<p>${questions[current]}</p>`;
+      options.forEach((opt, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => answer(index);
+        document.getElementById("chat").appendChild(btn);
+      });
+    }
+
+    function answer(level) {
+      score += level; // 0 = nada, 1 = poco, 2 = bastante
+      current++;
+      if (current < questions.length) {
+        document.getElementById("chat").innerHTML = `<p>${questions[current]}</p>`;
+        options.forEach((opt, index) => {
+          const btn = document.createElement("button");
+          btn.innerText = opt;
+          btn.onclick = () => answer(index);
+          document.getElementById("chat").appendChild(btn);
+        });
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      let message = "";
+      let resources = "";
+
+      if (score <= 3) {
+        message = "😌 Parece que estás bien. Recuerda tomarte pausas y cuidar de ti.";
+        resources = "<p><a href='https://www.youtube.com/watch?v=inpok4MKVLM' target='_blank'>Respiración guiada (YouTube)</a></p>";
+      } else if (score <= 6) {
+        message = "😕 Estás algo estresado. Haz una pausa de 10 minutos y respira.";
+        resources = `
+          <p><a href='https://www.calm.com/' target='_blank'>Meditación corta</a></p>
+          <p><a href='https://www.sleepfoundation.org/' target='_blank'>Tips para dormir mejor</a></p>`;
+      } else {
+        message = "😟 Detectamos un nivel alto de estrés. Es importante hablar con alguien.";
+        resources = `
+          <p><strong>Contacta al servicio psicológico universitario:</strong></p>
+          <p><a href='mailto:psicologia@ficuniversidad.edu'>psicologia@ficuniversidad.edu</a></p>
+          <p><a href='https://www.ficuniversidad.edu/servicios-psicologicos' target='_blank'>Ir al sitio</a></p>`;
+      }
+
+      document.getElementById("chat").innerHTML = `
+        <p>${message}</p>
+        ${resources}
+        <button onclick="location.reload()">Volver a empezar</button>
+      `;
+    }
+  </script>
+</body>
+</html>
